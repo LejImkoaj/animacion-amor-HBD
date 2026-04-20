@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Para Mi Amor - Daniel</title>
+    <style>
+        :root {
+            --tulip-main: #ff4d6d;
+            --tulip-dark: #c9184a;
+            --tulip-light: #ffb3c1;
+            --stem-green: #2d6a4f;
+            --leaf-green: #40916c;
+            --deep-red: #9a031e;
+            --soft-bg: #fff0f3;
+            --text-color: #4a0e0e;
+            --post-bg: #fff9c4; 
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #ffe5ec;
+            font-family: 'Georgia', serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        /* --- CONTENEDOR PRINCIPAL (RECUADRO) --- */
+        .main-wrapper {
+            display: flex;
+            flex-direction: row; /* Asegura el orden horizontal */
+            width: 90%;
+            max-width: 1000px;
+            align-items: center;
+            justify-content: space-around;
+            flex-wrap: wrap; /* Permite ajuste en móviles */
+            position: relative;
+            padding: 40px;
+            border-radius: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            overflow: hidden;
+            background-color: white;
+            z-index: 10;
+        }
+
+        /* --- IMAGEN DE FONDO TRASLÚCIDA INTERNA --- */
+        .main-wrapper::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('amor.png');
+            background-size: cover;
+            background-position: center;
+            opacity: 0.20;
+            z-index: -1;
+        }
+
+        /* --- ESCENA IZQUIERDA: TULIPÁN/CORAZÓN --- */
+        .stage {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-width: 320px;
+            height: 450px;
+            position: relative;
+            order: 1; /* Forzamos a que sea el primero */
+        }
+
+        /* --- TEXTO DERECHA --- */
+        .text-container {
+            flex: 1;
+            min-width: 300px;
+            padding: 20px;
+            color: var(--text-color);
+            line-height: 1.8;
+            font-size: 1.25rem;
+            min-height: 350px;
+            position: relative;
+            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
+            order: 2; /* Forzamos a que sea el segundo */
+        }
+
+        .typing-text { white-space: pre-wrap; }
+        .cursor {
+            border-right: 3px solid var(--tulip-main);
+            animation: blink 0.7s infinite;
+            display: none;
+            margin-left: 2px;
+        }
+        @keyframes blink { 50% { border-color: transparent; } }
+
+        .birthday-post {
+            position: absolute;
+            top: 0;
+            left: 0; /* Cambiado a la izquierda para que no choque con el texto */
+            background-color: var(--post-bg);
+            padding: 12px 20px;
+            border-radius: 2px;
+            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
+            transform: rotate(-3deg);
+            z-index: 30;
+            border-left: 5px solid #fbc02d;
+            font-weight: bold;
+            color: #5d4037;
+            font-size: 1rem;
+            animation: floatPost 3s ease-in-out infinite;
+        }
+
+        @keyframes floatPost {
+            0%, 100% { transform: rotate(-3deg) translateY(0); }
+            50% { transform: rotate(-5deg) translateY(-8px); }
+        }
+
+        #trigger {
+            position: relative;
+            width: 220px;
+            height: 220px;
+            cursor: pointer;
+            z-index: 20;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .tulip-img, .heart-img {
+            width: 100%;
+            height: auto;
+            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
+            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+            position: absolute;
+        }
+
+        .heart-img {
+            transform: scale(0);
+            opacity: 0;
+        }
+
+        .is-open .tulip-img {
+            opacity: 0;
+            transform: translateY(-20px) scale(0.4);
+        }
+
+        .is-open .heart-img {
+            opacity: 1;
+            transform: scale(1.1);
+            animation: beatHeart 0.8s infinite alternate 1s;
+        }
+
+        @keyframes beatHeart {
+            to { transform: scale(1.25); }
+        }
+
+        /* --- PARTÍCULAS --- */
+        .particle {
+            position: absolute;
+            pointer-events: none;
+            opacity: 0;
+            z-index: 5;
+            animation: floatParticle linear forwards;
+        }
+
+        @keyframes floatParticle {
+            0% { transform: translateY(110vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 0.8; }
+            90% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) rotate(360deg); opacity: 0; }
+        }
+
+        .hint {
+            margin-top: 20px;
+            color: var(--tulip-dark);
+            font-size: 0.85rem;
+            font-style: italic;
+            background: rgba(255,255,255,0.5);
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="main-wrapper">
+        <div class="stage">
+            <div class="birthday-post">
+                🎂 ¡Feliz Cumpleaños Amor! 🥳🎈
+            </div>
+            <div id="trigger">
+                <img src="tulipan.png" alt="Tulipán" class="tulip-img">
+                <img src="corazon_realista.png" alt="Corazón" class="heart-img">
+            </div>
+            <div id="hint" class="hint">Haz clic en el tulipán...</div>
+        </div>
+
+        <div class="text-container">
+            <span id="typing" class="typing-text"></span><span id="cursor" class="cursor">|</span>
+        </div>
+    </div>
+
+    <script>
+        const fullText = "Para:\nMi Amor\n\nNo eres coincidencia, eres lo que el Alma espera sin saberlo..\nHay dulzura en Ti, que no se explica, solo se Siente.\nY si esto te encontró tal vez mi Corazón ya sabia tu Nombre.\n\nT.A.M\nDaniel";
+        
+        const typingSpeed = 60; 
+        const particleInterval = 200; 
+
+        const typingElement = document.getElementById('typing');
+        const cursor = document.getElementById('cursor');
+        const trigger = document.getElementById('trigger');
+        const hint = document.getElementById('hint');
+        
+        let index = 0;
+        let isStarted = false;
+        let particleTimer; 
+
+        function typeWriter() {
+            if (index < fullText.length) {
+                typingElement.textContent += fullText.charAt(index);
+                index++;
+                setTimeout(typeWriter, typingSpeed);
+            } else {
+                clearInterval(particleTimer);
+            }
+        }
+
+        function createSingleParticle() {
+            const symbols = ['🌷', '❤️', '💖', '✨', '🌹'];
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+            p.style.left = (Math.random() * 100) + 'vw';
+            p.style.fontSize = (Math.random() * 20 + 15) + 'px';
+            const duration = (Math.random() * 4 + 3) + 's';
+            p.style.animationDuration = duration;
+            document.body.appendChild(p);
+            setTimeout(() => { p.remove(); }, parseFloat(duration) * 1000);
+        }
+
+        trigger.addEventListener('click', () => {
+            if (!isStarted) {
+                isStarted = true;
+                document.querySelector('.main-wrapper').style.backgroundColor = "rgba(255, 255, 255, 0.4)";
+                document.querySelector('.stage').classList.add('is-open');
+                hint.style.opacity = '0';
+                cursor.style.display = 'inline-block';
+                
+                particleTimer = setInterval(createSingleParticle, particleInterval);
+                setTimeout(typeWriter, 1000); 
+            }
+        });
+    </script>
+</body>
+</html>
