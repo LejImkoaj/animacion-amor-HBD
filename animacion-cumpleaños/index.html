@@ -11,10 +11,11 @@
             --tulip-light: #ffb3c1;
             --stem-green: #2d6a4f;
             --leaf-green: #40916c;
-            --deep-red: #9a031e;
-            --soft-bg: #fff0f3;
             --text-color: #4a0e0e;
-            --post-bg: #fff9c4; 
+            --gold: #d4af37;
+            /* Tiempos de animación ajustados a más lento */
+            --anim-slow: 1.5s; /* Para la aparición del cartel y transformación */
+            --typing-speed: 90ms; /* Velocidad de escritura más lenta */
         }
 
         body {
@@ -26,145 +27,207 @@
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow: hidden;
+            overflow-x: hidden;
         }
 
-        /* --- CONTENEDOR PRINCIPAL (RECUADRO) --- */
+        /* --- CONTENEDOR PRINCIPAL RESPONSIVO --- */
         .main-wrapper {
             display: flex;
-            flex-direction: row; /* Asegura el orden horizontal */
+            flex-direction: column;
             width: 90%;
-            max-width: 1000px;
+            max-width: 900px;
+            margin: 20px;
             align-items: center;
-            justify-content: space-around;
-            flex-wrap: wrap; /* Permite ajuste en móviles */
+            justify-content: center;
             position: relative;
-            padding: 40px;
+            padding: 20px;
             border-radius: 30px;
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-            overflow: hidden;
             background-color: white;
             z-index: 10;
+            transition: background-color 1s ease; /* Transición de fondo más lenta */
         }
 
-        /* --- IMAGEN DE FONDO TRASLÚCIDA INTERNA --- */
+        @media (min-width: 768px) {
+            .main-wrapper {
+                flex-direction: row;
+                padding: 40px;
+                height: 550px;
+            }
+        }
+
+        /* FONDO DE AMOR ORIGINAL */
         .main-wrapper::before {
             content: "";
             position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* Imagen de fondo de amor original */
             background-image: url('amor.png');
             background-size: cover;
             background-position: center;
-            opacity: 0.20;
+            opacity: 0.15; /* Traslúcida */
             z-index: -1;
+            border-radius: 30px;
         }
 
-        /* --- ESCENA IZQUIERDA: TULIPÁN/CORAZÓN --- */
+        /* --- ESCENA IZQUIERDA: FLORAL/CORAZÓN/LETRERO --- */
         .stage {
             flex: 1;
             display: flex;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            min-width: 320px;
-            height: 450px;
+            width: 100%;
+            height: 350px;
             position: relative;
-            order: 1; /* Forzamos a que sea el primero */
+            margin-bottom: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .stage { height: 100%; margin-bottom: 0; }
+        }
+
+        /* --- NUEVO LETRERO SVG SIN CÍRCULO Y ADORNADO CON TULIPANES --- */
+        .birthday-banner-container {
+            position: absolute;
+            top: 10px;
+            width: 95%;
+            max-width: 380px;
+            z-index: 30;
+            opacity: 0;
+            transform: scale(0.5);
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .is-open .birthday-banner-container {
+            /* Animación de aparición más lenta */
+            animation: bannerReveal var(--anim-slow) cubic-bezier(0.23, 1, 0.32, 1) forwards;
+            animation-delay: 0.3s;
+            pointer-events: auto;
+        }
+
+        @keyframes bannerReveal {
+            0% { opacity: 0; transform: scale(0.5) translateY(-20px); }
+            100% { opacity: 1; transform: scale(1) translateY(0deg); }
+        }
+
+        .banner-svg {
+            width: 100%;
+            height: auto;
+            /* Sombra sutil general */
+            filter: drop-shadow(0 3px 5px rgba(154,3,30,0.2));
+        }
+
+        /* --- CONTENEDOR DE SERPENTINAS --- */
+        .confetti-container {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 25;
+            overflow: hidden;
         }
 
         /* --- TEXTO DERECHA --- */
         .text-container {
             flex: 1;
-            min-width: 300px;
-            padding: 20px;
+            width: 100%;
+            padding: 15px;
             color: var(--text-color);
-            line-height: 1.8;
-            font-size: 1.25rem;
-            min-height: 350px;
-            position: relative;
-            text-shadow: 1px 1px 2px rgba(255,255,255,0.8);
-            order: 2; /* Forzamos a que sea el segundo */
+            line-height: 1.7; /* Espaciado de línea ligeramente mayor */
+            font-size: 1.1rem;
+            min-height: 200px;
+            text-align: center;
         }
 
-        .typing-text { white-space: pre-wrap; }
+        @media (min-width: 768px) {
+            .text-container {
+                text-align: left;
+                font-size: 1.25rem;
+                padding: 20px;
+            }
+        }
+
+        .typing-text { white-space: pre-wrap; font-weight: 500; }
+        
         .cursor {
             border-right: 3px solid var(--tulip-main);
             animation: blink 0.7s infinite;
             display: none;
-            margin-left: 2px;
         }
         @keyframes blink { 50% { border-color: transparent; } }
 
-        .birthday-post {
-            position: absolute;
-            top: 0;
-            left: 0; /* Cambiado a la izquierda para que no choque con el texto */
-            background-color: var(--post-bg);
-            padding: 12px 20px;
-            border-radius: 2px;
-            box-shadow: 3px 3px 10px rgba(0,0,0,0.1);
-            transform: rotate(-3deg);
-            z-index: 30;
-            border-left: 5px solid #fbc02d;
-            font-weight: bold;
-            color: #5d4037;
-            font-size: 1rem;
-            animation: floatPost 3s ease-in-out infinite;
-        }
-
-        @keyframes floatPost {
-            0%, 100% { transform: rotate(-3deg) translateY(0); }
-            50% { transform: rotate(-5deg) translateY(-8px); }
-        }
-
         #trigger {
             position: relative;
-            width: 220px;
-            height: 220px;
+            width: 160px;
+            height: 160px;
             cursor: pointer;
             z-index: 20;
             display: flex;
             justify-content: center;
             align-items: center;
+            margin-top: 80px; /* Más espacio para el letrero floral */
+        }
+
+        @media (min-width: 768px) {
+            #trigger { width: 220px; height: 220px; margin-top: 100px; }
         }
 
         .tulip-img, .heart-img {
             width: 100%;
             height: auto;
-            transition: all 1s cubic-bezier(0.4, 0, 0.2, 1);
-            filter: drop-shadow(0 10px 15px rgba(0,0,0,0.1));
+            max-height: 100%;
+            object-fit: contain;
+            /* Transición de transformación más lenta */
+            transition: all var(--anim-slow) cubic-bezier(0.4, 0, 0.2, 1);
             position: absolute;
         }
 
-        .heart-img {
-            transform: scale(0);
-            opacity: 0;
-        }
+        .heart-img { transform: scale(0); opacity: 0; }
 
-        .is-open .tulip-img {
-            opacity: 0;
-            transform: translateY(-20px) scale(0.4);
-        }
+        .is-open .tulip-img { opacity: 0; transform: translateY(-30px) scale(0.3); }
 
         .is-open .heart-img {
             opacity: 1;
             transform: scale(1.1);
-            animation: beatHeart 0.8s infinite alternate 1s;
+            /* Latido más lento */
+            animation: beatHeart 1.2s infinite alternate 1.5s;
         }
 
-        @keyframes beatHeart {
-            to { transform: scale(1.25); }
+        @keyframes beatHeart { to { transform: scale(1.2); } }
+
+        /* --- BOTÓN VOLVER A VER --- */
+        #reset-btn {
+            display: none;
+            margin-top: 15px;
+            padding: 10px 20px;
+            background-color: white;
+            border: 2px solid var(--tulip-main);
+            color: var(--tulip-dark);
+            border-radius: 25px;
+            font-family: 'Georgia', serif;
+            font-weight: bold;
+            cursor: pointer;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            z-index: 40;
         }
 
-        /* --- PARTÍCULAS --- */
+        #reset-btn:hover {
+            background-color: var(--tulip-main);
+            color: white;
+            transform: scale(1.05);
+        }
+
+        #reset-btn svg { width: 20px; height: 20px; fill: currentColor; }
+
+        /* --- PARTÍCULAS GENERALES --- */
         .particle {
-            position: absolute;
+            position: fixed;
             pointer-events: none;
-            opacity: 0;
-            z-index: 5;
+            z-index: 100;
             animation: floatParticle linear forwards;
         }
 
@@ -176,28 +239,79 @@
         }
 
         .hint {
-            margin-top: 20px;
+            margin-top: 10px;
             color: var(--tulip-dark);
             font-size: 0.85rem;
             font-style: italic;
-            background: rgba(255,255,255,0.5);
+            background: rgba(255,255,255,0.7);
             padding: 5px 15px;
             border-radius: 20px;
+            transition: opacity 0.5s;
         }
     </style>
 </head>
 <body>
 
-    <div class="main-wrapper">
-        <div class="stage">
-            <div class="birthday-post">
-                🎂 ¡Feliz Cumpleaños Amor! 🥳🎈
+    <div class="main-wrapper" id="mainCard">
+        <div class="stage" id="stageArea">
+            
+            <div class="birthday-banner-container">
+                <svg class="banner-svg" viewBox="0 0 400 160" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <filter id="textShadow" x="-10%" y="-10%" width="120%" height="120%">
+                            <feDropShadow dx="0" dy="1.5" stdDeviation="1" flood-color="#4a0e0e" flood-opacity="0.2"/>
+                        </filter>
+                        
+                        <linearGradient id="tulipGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" style="stop-color:#ff4d6d;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#c9184a;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    
+                    <g transform="translate(10, 10) scale(0.6)">
+                        <path d="M20,40 Q0,20 20,0 Q40,20 20,40 Z" fill="url(#tulipGrad)"/>
+                        <path d="M15,35 Q5,15 15,5 Q25,15 15,35 Z" fill="#ffb3c1" opacity="0.6"/>
+                        <path d="M20,40 L20,70" stroke="#2d6a4f" stroke-width="3"/>
+                        <path d="M20,55 Q5,55 5,40" fill="none" stroke="#2d6a4f" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(350, 10) scale(0.6)">
+                        <path d="M20,40 Q0,20 20,0 Q40,20 20,40 Z" fill="url(#tulipGrad)"/>
+                        <path d="M20,40 L20,70" stroke="#2d6a4f" stroke-width="3"/>
+                        <path d="M20,55 Q35,55 35,40" fill="none" stroke="#2d6a4f" stroke-width="2"/>
+                    </g>
+                    <g transform="translate(40, 120) scale(0.5) rotate(-15)">
+                        <path d="M20,40 Q0,20 20,0 Q40,20 20,40 Z" fill="url(#tulipGrad)"/>
+                        <path d="M20,40 L20,70" stroke="#2d6a4f" stroke-width="3"/>
+                    </g>
+                    <g transform="translate(320, 120) scale(0.5) rotate(15)">
+                        <path d="M20,40 Q0,20 20,0 Q40,20 20,40 Z" fill="url(#tulipGrad)"/>
+                        <path d="M20,40 L20,70" stroke="#2d6a4f" stroke-width="3"/>
+                    </g>
+
+                    <text x="200" y="70" text-anchor="middle" font-family="'Palatino Linotype', 'Book Antiqua', Palatino, serif" font-size="32" font-weight="bold" fill="#9a031e" filter="url(#textShadow)">
+                        Feliz Cumpleaños
+                    </text>
+                    <text x="200" y="105" text-anchor="middle" font-family="'Palatino Linotype', 'Book Antiqua', Palatino, serif" font-size="28" font-style="italic" fill="#d4af37" filter="url(#textShadow)">
+                        Amor
+                    </text>
+                </svg>
             </div>
+            
+            <div class="confetti-container" id="confettiStage"></div>
+
             <div id="trigger">
                 <img src="tulipan.png" alt="Tulipán" class="tulip-img">
                 <img src="corazon_realista.png" alt="Corazón" class="heart-img">
             </div>
-            <div id="hint" class="hint">Haz clic en el tulipán...</div>
+            <div id="hint" class="hint">Toca el tulipán...</div>
+            
+            <button id="reset-btn">
+                <svg viewBox="0 0 24 24">
+                    <path d="M12,2A10,10,0,0,0,2,12c0,5.28,4.1,9.61,9.31,9.97V19.95a8,8,0,1,1,2.69,0v2.02C19.9,21.61,24,17.28,24,12A10,10,0,0,0,12,2Zm1.31,14.31L12,15.19l-1.31,1.12V11.5h2.62Z"/>
+                    <path d="M17,8.5a1,1,0,0,1-1-1c0-1.5-1.5-2.5-3-2.5s-3,1-3,2.5a1,1,0,0,1-2,0c0-2.5,2.5-4.5,5-4.5s5,2,5,4.5A1,1,0,0,1,17,8.5Z"/>
+                </svg>
+                Volver a ver
+            </button>
         </div>
 
         <div class="text-container">
@@ -208,25 +322,104 @@
     <script>
         const fullText = "Para:\nMi Amor\n\nNo eres coincidencia, eres lo que el Alma espera sin saberlo..\nHay dulzura en Ti, que no se explica, solo se Siente.\nY si esto te encontró tal vez mi Corazón ya sabia tu Nombre.\n\nT.A.M\nDaniel";
         
-        const typingSpeed = 60; 
-        const particleInterval = 200; 
+        let index = 0;
+        let isStarted = false;
+        let particleTimer;
+        let typingTimeout;
+
+        // Variables de tiempo más lentas obtenidas de CSS
+        const rootStyles = getComputedStyle(document.documentElement);
+        const typingSpeed = parseInt(rootStyles.getPropertyValue('--typing-speed'));
+        const animSlowMS = parseFloat(rootStyles.getPropertyValue('--anim-slow')) * 1000;
 
         const typingElement = document.getElementById('typing');
         const cursor = document.getElementById('cursor');
         const trigger = document.getElementById('trigger');
         const hint = document.getElementById('hint');
-        
-        let index = 0;
-        let isStarted = false;
-        let particleTimer; 
+        const resetBtn = document.getElementById('reset-btn');
+        const stageArea = document.getElementById('stageArea');
+        const mainCard = document.getElementById('mainCard');
+        const confettiStage = document.getElementById('confettiStage');
 
+        // Función para crear la explosión de serpentinas (Caída más lenta)
+        function createExplosion() {
+            const colors = ['#ff4d6d', '#ffb3c1', '#d4af37', '#2d6a4f', '#fff'];
+            const count = 40; // Menos cantidad para efecto más limpio
+
+            for (let i = 0; i < count; i++) {
+                const svgNS = "http://www.w3.org/2000/svg";
+                const confetti = document.createElementNS(svgNS, "svg");
+                confetti.setAttribute("viewBox", "0 0 10 10");
+                confetti.style.position = 'absolute';
+                confetti.style.width = (Math.random() * 8 + 4) + 'px'; // Ligeramente más pequeños
+                confetti.style.height = confetti.style.width;
+                confetti.style.opacity = '0';
+                
+                if (Math.random() > 0.4) {
+                    const circle = document.createElementNS(svgNS, "circle");
+                    circle.setAttribute("cx", "5");
+                    circle.setAttribute("cy", "5");
+                    circle.setAttribute("r", "5");
+                    circle.setAttribute("fill", colors[Math.floor(Math.random() * colors.length)]);
+                    confetti.appendChild(circle);
+                } else {
+                    const rect = document.createElementNS(svgNS, "rect");
+                    rect.setAttribute("width", "10");
+                    rect.setAttribute("height", "4");
+                    rect.setAttribute("rx", "2");
+                    rect.setAttribute("fill", colors[Math.floor(Math.random() * colors.length)]);
+                    confetti.appendChild(rect);
+                }
+
+                // Posición inicial (detrás del letrero)
+                confetti.style.top = '15%'; 
+                confetti.style.left = '50%';
+                
+                confettiStage.appendChild(confetti);
+
+                const angle = Math.random() * Math.PI * 2;
+                const velocity = Math.random() * 80 + 30; // Menos velocidad inicial
+                const xEnd = Math.cos(angle) * velocity;
+                const yEnd = Math.sin(angle) * velocity + 180; // Caída final más larga
+                const rotation = Math.random() * 900 - 450; // Más rotación
+                const duration = Math.random() * 2 + 2.5; // Duración mucho más larga (2.5-4.5s)
+
+                confetti.animate([
+                    { 
+                        transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', 
+                        opacity: 0,
+                        offset: 0
+                    },
+                    { 
+                        transform: `translate(${xEnd * 0.4}px, ${yEnd * 0.2}px) scale(1) rotate(${rotation * 0.3}deg)`, 
+                        opacity: 1,
+                        offset: 0.15
+                    },
+                    { 
+                        transform: `translate(${xEnd}px, ${yEnd}px) scale(0.6) rotate(${rotation}deg)`, 
+                        opacity: 0,
+                        offset: 1
+                    }
+                ], {
+                    duration: duration * 1000,
+                    easing: 'cubic-bezier(0.2, 0.7, 0.4, 1)', // Caída más suave y controlada
+                    fill: 'forwards',
+                    delay: 400 // Sincronizado con la aparición del banner
+                });
+
+                setTimeout(() => { confetti.remove(); }, (duration + 0.5) * 1000);
+            }
+        }
+
+        // Función de escritura (Más lenta)
         function typeWriter() {
             if (index < fullText.length) {
                 typingElement.textContent += fullText.charAt(index);
                 index++;
-                setTimeout(typeWriter, typingSpeed);
+                typingTimeout = setTimeout(typeWriter, typingSpeed); // Velocidad CSS
             } else {
                 clearInterval(particleTimer);
+                resetBtn.style.display = 'flex';
             }
         }
 
@@ -236,24 +429,52 @@
             p.className = 'particle';
             p.textContent = symbols[Math.floor(Math.random() * symbols.length)];
             p.style.left = (Math.random() * 100) + 'vw';
-            p.style.fontSize = (Math.random() * 20 + 15) + 'px';
-            const duration = (Math.random() * 4 + 3) + 's';
+            p.style.fontSize = (Math.random() * 18 + 14) + 'px'; // Ligeramente más sutiles
+            const duration = (Math.random() * 4 + 3) + 's'; // Flotan más lento (3-7s)
             p.style.animationDuration = duration;
             document.body.appendChild(p);
             setTimeout(() => { p.remove(); }, parseFloat(duration) * 1000);
         }
 
-        trigger.addEventListener('click', () => {
+        function startAnimation() {
             if (!isStarted) {
                 isStarted = true;
-                document.querySelector('.main-wrapper').style.backgroundColor = "rgba(255, 255, 255, 0.4)";
-                document.querySelector('.stage').classList.add('is-open');
+                mainCard.style.backgroundColor = "rgba(255, 255, 255, 0.7)"; // Fondo más claro
+                stageArea.classList.add('is-open');
+                
+                createExplosion();
+                
                 hint.style.opacity = '0';
+                resetBtn.style.display = 'none';
                 cursor.style.display = 'inline-block';
                 
-                particleTimer = setInterval(createSingleParticle, particleInterval);
-                setTimeout(typeWriter, 1000); 
+                particleTimer = setInterval(createSingleParticle, 350); // Menos frecuencia
+                // Esperar a que la transformación lenta de la flor termine
+                setTimeout(typeWriter, animSlowMS + 1000); 
             }
+        }
+
+        function resetAnimation() {
+            clearTimeout(typingTimeout);
+            clearInterval(particleTimer);
+            
+            index = 0;
+            isStarted = false;
+            typingElement.textContent = "";
+            
+            confettiStage.innerHTML = '';
+            
+            stageArea.classList.remove('is-open');
+            mainCard.style.backgroundColor = "white";
+            hint.style.opacity = '1';
+            cursor.style.display = 'none';
+            resetBtn.style.display = 'none';
+        }
+
+        trigger.addEventListener('click', startAnimation);
+        resetBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            resetAnimation();
         });
     </script>
 </body>
