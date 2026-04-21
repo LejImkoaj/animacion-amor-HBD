@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Para Mi Amor - Daniel</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Great+Vibes&display=swap" rel="stylesheet">
-    
     <style>
-        /* Definición de fuentes personalizadas */
+        /* Fuentes personalizadas */
         @font-face {
             font-family: 'Kinkee';
-            src: url('fonts/Kinkee.ttf'); /* Asegúrate de que la ruta sea correcta */
+            src: url('fonts/Kinkee.ttf');
         }
         @font-face {
             font-family: 'Matcha Salt';
@@ -22,9 +20,8 @@
             --tulip-dark: #c9184a;
             --text-color: #4a0e0e;
             --gold: #d4af37;
-            /* Animación extremadamente lenta para apreciar los detalles */
-            --anim-ultra-slow: 2.5s; 
-            --typing-speed: 110ms;
+            --anim-ultra-slow: 1.5s; /* Un poco más rápido */
+            --typing-speed: 50ms; /* Velocidad aumentada */
         }
 
         body {
@@ -50,11 +47,41 @@
             box-shadow: 0 15px 35px rgba(0,0,0,0.1);
             background-color: white;
             z-index: 10;
-            transition: background-color 1.5s ease;
+            overflow: hidden;
+            min-height: 500px;
         }
 
         @media (min-width: 768px) {
-            .main-wrapper { flex-direction: row; height: 600px; padding: 40px; }
+            .main-wrapper { flex-direction: row; min-height: 600px; padding: 40px; }
+        }
+
+        #cover-layer {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-image: url('para_ti.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            cursor: pointer;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .cover-text {
+            font-family: 'Kinkee', cursive;
+            font-size: 3.5rem;
+            color: #9a031e;
+            padding-right: 10%;
+            text-align: center;
+            line-height: 1.2;
+            text-shadow: 2px 2px 10px white;
+        }
+
+        .cover-text span {
+            display: block;
+            font-size: 4.5rem;
         }
 
         .main-wrapper::before {
@@ -64,10 +91,12 @@
             background-image: url('amor.png');
             background-size: cover;
             background-position: center;
-            opacity: 0.18;
+            opacity: 0;
             z-index: -1;
-            border-radius: 30px;
+            transition: opacity 1.5s ease;
         }
+
+        .is-open-bg::before { opacity: 0.18; }
 
         .stage {
             flex: 1;
@@ -76,154 +105,109 @@
             justify-content: center;
             align-items: center;
             position: relative;
+            opacity: 0;
+            transition: opacity 0.8s ease;
         }
 
-        /* --- TÍTULO CON FUENTE KINKEE --- */
         .birthday-banner-container {
             position: absolute;
             top: 0px;
             width: 100%;
             z-index: 30;
-            opacity: 0;
-            transform: translateY(-20px);
             text-align: center;
         }
 
-        .is-open .birthday-banner-container {
-            animation: bannerFadeSlow var(--anim-ultra-slow) ease-out forwards;
-            animation-delay: 0.5s;
-        }
-
-        @keyframes bannerFadeSlow {
-            0% { opacity: 0; transform: translateY(-20px) scale(0.9); }
-            100% { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
         .title-kinkee {
-            font-family: 'Kinkee', 'Dancing Script', cursive; /* Fallback si no carga */
-            font-size: 3.5rem; /* Tamaño más grande solicitado */
+            font-family: 'Kinkee', cursive;
+            font-size: 3rem;
             color: #9a031e;
             margin: 0;
-            line-height: 1;
-            filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.1));
         }
 
         .subtitle-kinkee {
-            font-family: 'Kinkee', 'Dancing Script', cursive;
-            font-size: 2.2rem;
+            font-family: 'Kinkee', cursive;
+            font-size: 2rem;
             color: var(--gold);
             margin-top: -10px;
         }
 
-        /* --- TEXTO CON FUENTE MATCHA SALT --- */
         .text-container {
             flex: 1;
             padding: 20px;
             color: var(--text-color);
-            font-family: 'Matcha Salt', 'Great Vibes', cursive; /* Fallback */
-            font-size: 1.6rem;
-            line-height: 1.4;
+            font-family: 'Matcha Salt', cursive;
+            font-size: 1.5rem;
+            line-height: 1.5;
             min-height: 250px;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            /* IMPORTANTE: Para que respete los saltos de línea */
+            white-space: pre-wrap; 
+            align-self: center;
         }
 
-        .typing-text { white-space: pre-wrap; }
-
-        /* --- CONTENEDOR DEL TULIPÁN (MÁS GRANDE) --- */
         #trigger {
             position: relative;
-            width: 250px; /* Aumentado */
-            height: 250px; /* Aumentado */
-            cursor: pointer;
+            width: 200px;
+            height: 200px;
             z-index: 20;
-            margin-top: 50px; /* Ajustado para el nuevo texto */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            margin-top: 100px;
         }
 
         .tulip-img, .heart-img {
-            width: 100%;
-            height: 100%;
+            width: 100%; height: 100%;
             object-fit: contain;
-            transition: all var(--anim-ultra-slow) cubic-bezier(0.4, 0, 0.2, 1);
             position: absolute;
+            transition: all var(--anim-ultra-slow) cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .heart-img { transform: scale(0); opacity: 0; }
 
-        .is-open .tulip-img { opacity: 0; transform: scale(0.2) rotate(15deg); }
+        .is-open .tulip-img { opacity: 0; transform: scale(0.2); }
         .is-open .heart-img {
-            opacity: 1;
-            transform: scale(1.1);
-            animation: beatHeartSlow 2s infinite alternate 2s;
+            opacity: 1; transform: scale(1.1);
+            animation: beatHeartSlow 1.5s infinite alternate 1.5s;
         }
 
         @keyframes beatHeartSlow { to { transform: scale(1.2); } }
 
-        /* --- TEXTO "SOLO PARA TI!" --- */
-        .solo-para-ti {
-            font-family: 'Great Vibes', cursive;
-            font-size: 2rem;
-            color: var(--gold);
-            margin-top: 15px;
-            opacity: 1;
-            transition: opacity 0.5s ease;
-        }
-
-        .is-open .solo-para-ti {
-            opacity: 0;
-        }
-
-        /* --- PEQUEÑOS CORAZONES ALREDEDOR --- */
-        .decorative-heart {
-            position: absolute;
-            width: 15px;
-            height: 15px;
-            fill: var(--tulip-main);
-            opacity: 0.7;
-            transition: opacity 0.5s ease;
-        }
-
-        .is-open .decorative-heart {
-            opacity: 0;
-        }
-
-        /* Posiciones de los corazones */
-        .heart-1 { top: -20px; left: 10px; transform: rotate(-15deg); }
-        .heart-2 { top: 30px; right: -25px; transform: rotate(10deg); }
-        .heart-3 { bottom: 10px; left: -20px; transform: rotate(20deg); }
-        .heart-4 { bottom: -15px; right: 40px; transform: rotate(-10deg); }
-
         #reset-btn {
             display: none;
             margin-top: 20px;
-            padding: 12px 25px;
-            background-color: white;
+            padding: 10px 25px;
+            background: white;
             border: 2px solid var(--tulip-main);
-            color: var(--tulip-dark);
             border-radius: 30px;
             font-family: 'Kinkee', sans-serif;
-            font-size: 1.2rem;
             cursor: pointer;
-            z-index: 40;
-            transition: 0.3s;
         }
-
-        #reset-btn:hover { background-color: var(--tulip-main); color: white; }
 
         .confetti-container {
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none;
             z-index: 25;
+            overflow: hidden;
+        }
+
+        .streamer {
+            fill: none;
+            stroke-width: 3;
+            stroke-linecap: round;
         }
     </style>
 </head>
 <body>
 
     <div class="main-wrapper" id="mainCard">
+        <div id="cover-layer">
+            <div class="cover-text">
+                Solo para Ti!
+                <span>¡Abrelo!</span>
+            </div>
+        </div>
+
         <div class="stage" id="stageArea">
-            
             <div class="birthday-banner-container">
                 <h1 class="title-kinkee">Feliz Cumpleaños</h1>
                 <div class="subtitle-kinkee">Amor</div>
@@ -232,84 +216,120 @@
             <div class="confetti-container" id="confettiStage"></div>
 
             <div id="trigger">
-                <svg class="decorative-heart heart-1" viewBox="0 0 32 32"><path d="M16 28.5s-12-7.2-12-14.4c0-4.8 3.6-8.4 8.4-8.4 2.8 0 5.2 1.6 6.6 4.2 1.4-2.6 3.8-4.2 6.6-4.2 4.8 0 8.4 3.6 8.4 8.4 0 7.2-12 14.4-12 14.4z"/></svg>
-                <svg class="decorative-heart heart-2" viewBox="0 0 32 32"><path d="M16 28.5s-12-7.2-12-14.4c0-4.8 3.6-8.4 8.4-8.4 2.8 0 5.2 1.6 6.6 4.2 1.4-2.6 3.8-4.2 6.6-4.2 4.8 0 8.4 3.6 8.4 8.4 0 7.2-12 14.4-12 14.4z"/></svg>
-                <svg class="decorative-heart heart-3" viewBox="0 0 32 32"><path d="M16 28.5s-12-7.2-12-14.4c0-4.8 3.6-8.4 8.4-8.4 2.8 0 5.2 1.6 6.6 4.2 1.4-2.6 3.8-4.2 6.6-4.2 4.8 0 8.4 3.6 8.4 8.4 0 7.2-12 14.4-12 14.4z"/></svg>
-                <svg class="decorative-heart heart-4" viewBox="0 0 32 32"><path d="M16 28.5s-12-7.2-12-14.4c0-4.8 3.6-8.4 8.4-8.4 2.8 0 5.2 1.6 6.6 4.2 1.4-2.6 3.8-4.2 6.6-4.2 4.8 0 8.4 3.6 8.4 8.4 0 7.2-12 14.4-12 14.4z"/></svg>
-
                 <img src="tulipan.png" alt="Tulipán" class="tulip-img">
                 <img src="corazon_realista.png" alt="Corazón" class="heart-img">
             </div>
-
-            <div class="solo-para-ti">¡Solo para Ti!</div>
             
             <button id="reset-btn">Volver a ver 🌷</button>
         </div>
 
-        <div class="text-container">
-            <span id="typing" class="typing-text"></span>
-        </div>
+        <div class="text-container" id="textArea"><span id="typing"></span></div>
     </div>
 
     <script>
         const fullText = "Para:\nMi Amor\n\nNo eres coincidencia, eres lo que el Alma espera sin saberlo..\nHay dulzura en Ti, que no se explica, solo se Siente.\nY si esto te encontró tal vez mi Corazón ya sabia tu Nombre.\n\nT.A.M\nDaniel";
         
         let index = 0;
-        let isStarted = false;
-        let typingTimeout;
-
-        const typingElement = document.getElementById('typing');
-        const trigger = document.getElementById('trigger');
-        const resetBtn = document.getElementById('reset-btn');
+        const typingSpeed = 50; // Velocidad ajustada
+        const cover = document.getElementById('cover-layer');
+        const mainCard = document.getElementById('mainCard');
         const stageArea = document.getElementById('stageArea');
+        const textArea = document.getElementById('textArea');
+        const typingElement = document.getElementById('typing');
         const confettiStage = document.getElementById('confettiStage');
 
-        function createSlowConfetti() {
-            for (let i = 0; i < 30; i++) {
-                const petal = document.createElement('div');
-                petal.innerHTML = '🌸';
-                petal.style.position = 'absolute';
-                petal.style.left = '50%';
-                petal.style.top = '20%';
-                petal.style.fontSize = Math.random() * 20 + 10 + 'px';
-                confettiStage.appendChild(petal);
+        function createExplosionEffect() {
+            const colors = ['#ff4d6d', '#ffb3c1', '#d4af37', '#fff'];
+            const particleCount = 50;
 
-                const angle = Math.random() * Math.PI * 2;
-                const dist = Math.random() * 150 + 50;
-                
-                petal.animate([
-                    { transform: 'translate(-50%, -50%) scale(0)', opacity: 0 },
-                    { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist + 200}px) rotate(360deg)`, opacity: 1 }
-                ], {
-                    duration: 4000,
-                    easing: 'ease-out',
-                    fill: 'forwards'
-                });
+            for (let i = 0; i < particleCount; i++) {
+                if (Math.random() > 0.4) {
+                    createSingleConfetti(colors);
+                } else {
+                    createSingleStreamer(colors);
+                }
             }
         }
 
+        function createSingleConfetti(colors) {
+            const petal = document.createElement('div');
+            petal.innerHTML = '🌸';
+            petal.style.position = 'absolute';
+            petal.style.left = '50%'; petal.style.top = '20%';
+            petal.style.fontSize = Math.random() * 20 + 10 + 'px';
+            confettiStage.appendChild(petal);
+
+            const angle = Math.random() * Math.PI * 2;
+            const dist = Math.random() * 150 + 50;
+            const duration = Math.random() * 1500 + 2500; 
+
+            petal.animate([
+                { transform: 'translate(-50%, -50%) scale(0) rotate(0deg)', opacity: 0 },
+                { transform: `translate(${Math.cos(angle)*dist}px, ${Math.sin(angle)*dist + 200}px) rotate(720deg)`, opacity: 1 }
+            ], { duration: duration, easing: 'ease-out', fill: 'forwards' });
+            
+            setTimeout(() => petal.remove(), duration + 100);
+        }
+
+        function createSingleStreamer(colors) {
+            const svgNS = "http://www.w3.org/2000/svg";
+            const svg = document.createElementNS(svgNS, "svg");
+            svg.setAttribute("viewBox", "0 0 10 50");
+            svg.style.position = 'absolute';
+            svg.style.left = '50%'; svg.style.top = '15%';
+            svg.style.width = Math.random() * 5 + 3 + 'px';
+            svg.style.height = Math.random() * 60 + 40 + 'px';
+            svg.style.opacity = '0';
+
+            const path = document.createElementNS(svgNS, "path");
+            const d = `M${Math.random()*10} 0 Q ${Math.random()*15} 15, ${Math.random()*10} 30 T ${Math.random()*10} 50`;
+            path.setAttribute("d", d);
+            path.setAttribute("class", "streamer");
+            path.setAttribute("stroke", colors[Math.floor(Math.random() * colors.length)]);
+            svg.appendChild(path);
+            confettiStage.appendChild(svg);
+
+            const xOffset = (Math.random() - 0.5) * 120;
+            const duration = Math.random() * 2000 + 3000;
+
+            svg.animate([
+                { transform: 'translate(-50%, -50%) rotate(0deg) scaleY(0)', opacity: 0 },
+                { transform: `translate(${-50 + xOffset}px, ${150 + Math.random()*50}px) rotate(${Math.random()*720 - 360}deg) scaleY(1)`, opacity: 1 }
+            ], { duration: duration, easing: 'ease-out', fill: 'forwards' });
+
+            setTimeout(() => svg.remove(), duration + 100);
+        }
+
+        // Función de escritura mejorada para saltos de línea
         function typeWriter() {
             if (index < fullText.length) {
-                typingElement.textContent += fullText.charAt(index);
+                const char = fullText.charAt(index);
+                typingElement.textContent += char;
                 index++;
-                typingTimeout = setTimeout(typeWriter, 110); // Velocidad lenta
+                setTimeout(typeWriter, typingSpeed);
             } else {
-                resetBtn.style.display = 'block';
+                document.getElementById('reset-btn').style.display = 'block';
             }
         }
 
-        trigger.addEventListener('click', () => {
-            if (!isStarted) {
-                isStarted = true;
+        cover.addEventListener('click', () => {
+            cover.style.opacity = '0';
+            setTimeout(() => { cover.style.visibility = 'hidden'; }, 800);
+
+            mainCard.classList.add('is-open-bg');
+            stageArea.style.opacity = '1';
+            textArea.style.opacity = '1';
+
+            setTimeout(() => {
                 stageArea.classList.add('is-open');
-                document.getElementById('mainCard').style.backgroundColor = "rgba(255,255,255,0.8)";
-                createSlowConfetti();
-                setTimeout(typeWriter, 2500); // Esperar a la animación lenta del título
-            }
+                createExplosionEffect();
+                // Empieza a escribir un poco antes para que fluya mejor
+                setTimeout(typeWriter, 1200); 
+            }, 400);
         });
 
-        resetBtn.addEventListener('click', () => {
-            location.reload(); // Forma más limpia de reiniciar fuentes y estados
+        document.getElementById('reset-btn').addEventListener('click', () => {
+            location.reload();
         });
     </script>
 </body>
