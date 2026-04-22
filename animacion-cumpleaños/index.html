@@ -20,8 +20,8 @@
             --tulip-dark: #c9184a;
             --text-color: #4a0e0e;
             --gold: #d4af37;
-            --anim-ultra-slow: 1.5s; /* Un poco más rápido */
-            --typing-speed: 50ms; /* Velocidad aumentada */
+            --anim-ultra-slow: 1.5s; 
+            --typing-speed: 50ms; 
         }
 
         body {
@@ -141,7 +141,6 @@
             min-height: 250px;
             opacity: 0;
             transition: opacity 0.8s ease;
-            /* IMPORTANTE: Para que respete los saltos de línea */
             white-space: pre-wrap; 
             align-self: center;
         }
@@ -199,6 +198,8 @@
 </head>
 <body>
 
+    <audio id="audio_mor" src="audio_mor.m4a"></audio>
+
     <div class="main-wrapper" id="mainCard">
         <div id="cover-layer">
             <div class="cover-text">
@@ -230,13 +231,14 @@
         const fullText = "Para:\nMi Amor\n\nNo eres coincidencia, eres lo que el Alma espera sin saberlo..\nHay dulzura en Ti, que no se explica, solo se Siente.\nY si esto te encontró tal vez mi Corazón ya sabia tu Nombre.\n\nT.A.M\nDaniel";
         
         let index = 0;
-        const typingSpeed = 50; // Velocidad ajustada
+        const typingSpeed = 50; 
         const cover = document.getElementById('cover-layer');
         const mainCard = document.getElementById('mainCard');
         const stageArea = document.getElementById('stageArea');
         const textArea = document.getElementById('textArea');
         const typingElement = document.getElementById('typing');
         const confettiStage = document.getElementById('confettiStage');
+        const audio = document.getElementById('audio_mor');
 
         function createExplosionEffect() {
             const colors = ['#ff4d6d', '#ffb3c1', '#d4af37', '#fff'];
@@ -300,7 +302,6 @@
             setTimeout(() => svg.remove(), duration + 100);
         }
 
-        // Función de escritura mejorada para saltos de línea
         function typeWriter() {
             if (index < fullText.length) {
                 const char = fullText.charAt(index);
@@ -312,7 +313,11 @@
             }
         }
 
+        // AL HACER CLIC EN LA PORTADA
         cover.addEventListener('click', () => {
+            // REPRODUCIR AUDIO
+            audio.play();
+
             cover.style.opacity = '0';
             setTimeout(() => { cover.style.visibility = 'hidden'; }, 800);
 
@@ -323,7 +328,6 @@
             setTimeout(() => {
                 stageArea.classList.add('is-open');
                 createExplosionEffect();
-                // Empieza a escribir un poco antes para que fluya mejor
                 setTimeout(typeWriter, 1200); 
             }, 400);
         });
